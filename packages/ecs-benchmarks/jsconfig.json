@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonJS",
+    "rootDir": "src",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "noEmit": true
+  }
+}

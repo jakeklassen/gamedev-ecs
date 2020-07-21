@@ -1,0 +1,24 @@
+{
+  "name": "ecs-benchmarks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jake Klassen",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@gamedev/ecs": "workspace:^0.1.0",
+    "@jakeklassen/ecs": "^2.3.7",
+    "benchmark": "^2.1.4",
+    "chalk": "^4.1.0",
+    "ent-comp": "^0.9.1",
+    "flock-ecs": "^0.1.5",
+    "makr": "^2.1.1",
+    "modecs": "^0.1.11",
+    "perform-ecs": "^0.7.8",
+    "picoes": "^0.5.3",
+    "tiny-ecs": "^2.0.0"
+  }
+}

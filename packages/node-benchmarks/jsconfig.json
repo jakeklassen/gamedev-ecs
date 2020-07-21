@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": [],
+    "checkJs": true
+  },
+  "typeAcquisition": { "enable": true }
+}
