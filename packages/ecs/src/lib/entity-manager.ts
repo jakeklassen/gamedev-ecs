@@ -8,6 +8,7 @@ export type Component = {
 };
 
 export type ComponentFactory = {
+  name: string;
   (): Component;
   mask: {
     value: bigint;
@@ -19,12 +20,14 @@ export type EntityId = number;
 
 export class Entity {
   id: EntityId = 0;
+
+  [key: string]: Component | number;
 }
 
 export class Filter {
   constructor(
     public readonly mask: bigint,
-    public readonly componentMaps: ComponentMap2[]
+    public readonly entities: Entity[]
   ) {}
 }
 
@@ -48,7 +51,7 @@ export class EntityManager {
     // Check and add to filters
     for (const filter of this.filters) {
       if ((componentMap.mask & filter.mask) === filter.mask) {
-        filter.componentMaps.push(componentMap);
+        filter.entities.push(entity);
       }
     }
 
@@ -64,12 +67,12 @@ export class EntityManager {
 
     if (entityComponents != null) {
       for (const filter of this.filters) {
-        const index = filter.componentMaps.findIndex(
-          (componentMap) => componentMap.entity.id === entity.id
+        const index = filter.entities.findIndex(
+          (filterEntity) => filterEntity.id === entity.id
         );
 
         if (index !== -1) {
-          filter.componentMaps.splice(index, 1);
+          filter.entities.splice(index, 1);
         }
       }
     }
@@ -82,15 +85,15 @@ export class EntityManager {
   }
 
   createFilter(...factories: ComponentFactory[]) {
-    const filtered: ComponentMap2[] = [];
+    const filtered: Entity[] = [];
     const mask = factories.reduce(
       (filterMask, factory) => filterMask | factory.mask.value,
       0n
     );
 
-    for (const [_entity, componentMap] of this.entities.entries()) {
+    for (const [entity, componentMap] of this.entities.entries()) {
       if ((componentMap.mask & mask) === mask) {
-        filtered.push(componentMap);
+        filtered.push(entity);
       }
     }
 

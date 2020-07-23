@@ -16,7 +16,7 @@ export class ComponentMap2 {
   readonly mask = 0n;
   readonly entity: Entity;
 
-  [key: number]: any;
+  [key: number]: Component;
 
   constructor(entity: Entity) {
     this.entity = entity;
@@ -30,8 +30,13 @@ export class ComponentMap2 {
     factory: T,
     component: ReturnType<typeof factory>
   ) {
+    this.entity[factory.name] = component;
     this[factory.mask.index] = component;
     (this.mask as bigint) |= factory.mask.value;
+  }
+
+  has<T extends ComponentFactory>(factory: T) {
+    return this[factory.mask.index] != null;
   }
 }
 

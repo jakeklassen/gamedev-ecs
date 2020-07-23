@@ -2,29 +2,31 @@
 
 const { component, World } = require("@gamedev/ecs");
 
-const position = component((x = 0, y = 0) => ({
-  x,
-  y,
-}));
+const position = component(function position(x = 0, y = 0) {
+  return { x, y };
+});
 
-const velocity = component((x = 0, y = 0) => ({
-  x,
-  y,
-}));
+const velocity = component(function velocity(x = 0, y = 0) {
+  return { x, y };
+});
 
-const animation = component((length = 1) => ({
-  frame: 0,
-  length,
-}));
+const animation = component(function animation(length = 1) {
+  return {
+    frame: 0,
+    length,
+  };
+});
 
-const render = component((sprite = null) => ({
-  sprite,
-}));
+const render = component(function render(sprite = null) {
+  return {
+    sprite,
+  };
+});
 
-console.log("position", position.mask);
-console.log("velocity", velocity.mask);
-console.log("animation", animation.mask);
-console.log("render", render.mask);
+console.log(position.name, position.mask);
+console.log(velocity.name, velocity.mask);
+console.log(animation.name, animation.mask);
+console.log(render.name, render.mask);
 
 function setup() {
   return new World();
@@ -87,29 +89,29 @@ exports.bench_update = (count) => {
 
   insertEntities(world, count);
 
-  console.log("filter1 count", filter1.componentMaps.length);
+  console.log("filter1 count", filter1.entities.length);
 
-  console.log("filter2 count", filter2.componentMaps.length);
+  console.log("filter2 count", filter2.entities.length);
 
-  console.log("filter3 count", filter3.componentMaps.length);
+  console.log("filter3 count", filter3.entities.length);
 
   return function ekr_bench_update() {
-    for (const componentMap of filter1.componentMaps) {
-      const pos = componentMap.get(position);
-      const vel = componentMap.get(velocity);
+    for (const entity of filter1.entities) {
+      const pos = entity.position;
+      const vel = entity.velocity;
 
       pos.x += vel.x;
       pos.y += vel.y;
     }
 
-    for (const componentMap of filter2.componentMaps) {
-      const anim = componentMap.get(animation);
+    for (const entity of filter2.entities) {
+      const anim = entity.animation;
 
       anim.frame = (anim.frame + 1) % anim.length;
     }
 
-    for (const componentMap of filter3.componentMaps) {
-      if (!componentMap) throw new Error();
+    for (const entity of filter3.entities) {
+      if (!entity) throw new Error();
     }
   };
 };
