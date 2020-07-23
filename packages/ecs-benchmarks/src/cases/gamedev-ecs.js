@@ -104,6 +104,7 @@ exports.bench_update = (count) => {
 
     for (const componentMap of filter2.componentMaps) {
       const anim = componentMap.get(animation);
+
       anim.frame = (anim.frame + 1) % anim.length;
     }
 

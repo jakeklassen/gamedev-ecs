@@ -12,6 +12,56 @@ function arrayFill(arr: any[], value: any) {
   return arr;
 }
 
+export class ComponentMap2 {
+  readonly mask = 0n;
+  readonly entity: Entity;
+
+  [key: number]: any;
+
+  constructor(entity: Entity) {
+    this.entity = entity;
+  }
+
+  get<T extends ComponentFactory>(factory: T) {
+    return this[factory.mask.index];
+  }
+
+  set<T extends ComponentFactory>(
+    factory: T,
+    component: ReturnType<typeof factory>
+  ) {
+    this[factory.mask.index] = component;
+    (this.mask as bigint) |= factory.mask.value;
+  }
+}
+
+export const componentMapFactory = (entity: Entity) =>
+  ({
+    mask: 0n,
+    entity,
+
+    get<T extends ComponentFactory>(factory: T) {
+      return this[factory.mask.index];
+    },
+
+    set<T extends ComponentFactory>(
+      factory: T,
+      component: ReturnType<typeof factory>
+    ) {
+      this[factory.mask.index] = component;
+      // @ts-ignore
+      this.mask |= factory.mask.value;
+    },
+  } as {
+    readonly mask: bigint;
+    readonly entity: Entity;
+    get<T extends ComponentFactory>(factory: T): ReturnType<typeof factory>;
+    set<T extends ComponentFactory>(
+      factory: T,
+      component: ReturnType<typeof factory>
+    ): void;
+  } & { [key: string]: any });
+
 export class ComponentMap {
   components: Array<Component | null> = arrayCreate(32, null);
   readonly entity: Entity;

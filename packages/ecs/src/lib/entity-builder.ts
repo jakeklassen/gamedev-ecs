@@ -1,22 +1,22 @@
-import { ComponentMap } from './component-map';
+import { ComponentMap2 } from './component-map';
 import { ComponentFactory, Entity, EntityManager } from './entity-manager';
 
 export class EntityBuilder {
-  private componentMap: ComponentMap;
+  private componentMap: ComponentMap2;
   private entity: Entity;
   private entityManager: EntityManager;
 
   constructor(entityManager: EntityManager) {
     this.entityManager = entityManager;
     this.entity = entityManager.createEntity();
-    this.componentMap = new ComponentMap(this.entity);
+    this.componentMap = new ComponentMap2(this.entity);
   }
 
   with<T extends ComponentFactory>(
     factory: T,
     component: ReturnType<typeof factory>
   ) {
-    this.componentMap.add(factory, component);
+    this.componentMap.set(factory, component);
 
     return this;
   }

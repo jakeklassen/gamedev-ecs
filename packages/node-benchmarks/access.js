@@ -29,36 +29,46 @@ suite
   .add("no-op loop baseline", () => {
     for (let i = 0; i < ITERATIONS; ++i);
   })
-  .add("empty array access", () => {
-    for (let i = 0; i < ITERATIONS; ++i) {
-      emptyArray[samples[i]];
-    }
-  })
+  // .add("empty array access", () => {
+  //   for (let i = 0; i < ITERATIONS; ++i) {
+  //     emptyArray[samples[i]];
+  //   }
+  // })
   .add("presized array access", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      presizedArray[samples[i]];
+      presizedArray[i];
+    }
+  })
+  .add("presized array write", () => {
+    for (let i = 0; i < ITERATIONS; ++i) {
+      presizedArray[i] = i;
     }
   })
   .add("object access", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      emptyObject[samples[i]];
+      emptyObject[i];
     }
   })
-  .add("Map number key access", () => {
+  .add("object write", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      emptySimpleMap.get(samples[i]);
+      emptyObject[i] = i;
     }
   })
-  .add("Map bigint key access", () => {
-    for (let i = 0; i < ITERATIONS; ++i) {
-      emptyComplexMap.get(bigintSamples[i]);
-    }
-  })
-  .add("Map object key access", () => {
-    for (let i = 0; i < ITERATIONS; ++i) {
-      emptyComplexMap.get(objectSamples[i]);
-    }
-  })
+  // .add("Map number key access", () => {
+  //   for (let i = 0; i < ITERATIONS; ++i) {
+  //     emptySimpleMap.get(samples[i]);
+  //   }
+  // })
+  // .add("Map bigint key access", () => {
+  //   for (let i = 0; i < ITERATIONS; ++i) {
+  //     emptyComplexMap.get(bigintSamples[i]);
+  //   }
+  // })
+  // .add("Map object key access", () => {
+  //   for (let i = 0; i < ITERATIONS; ++i) {
+  //     emptyComplexMap.get(objectSamples[i]);
+  //   }
+  // })
   .on("cycle", (event) => {
     console.log(String(event.target));
   })

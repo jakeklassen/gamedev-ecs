@@ -1,4 +1,4 @@
-import { ComponentMap } from './component-map';
+import { ComponentMap2 } from './component-map';
 import { EntityBuilder } from './entity-builder';
 
 export type SimpleType = string | number | bigint | boolean | null;
@@ -24,16 +24,16 @@ export class Entity {
 export class Filter {
   constructor(
     public readonly mask: bigint,
-    public readonly componentMaps: ComponentMap[]
+    public readonly componentMaps: ComponentMap2[]
   ) {}
 }
 
 export class EntityManager {
   private nextEntityId = 0;
 
-  private entities: Map<Entity, ComponentMap> = new Map();
+  private entities: Map<Entity, ComponentMap2> = new Map();
 
-  private filters: Map<Filter, ComponentMap[]> = new Map();
+  private filters: Filter[] = [];
 
   createEntity() {
     const entity = new Entity();
@@ -42,13 +42,13 @@ export class EntityManager {
     return entity;
   }
 
-  initEntity(entity: Entity, componentMap: ComponentMap) {
+  initEntity(entity: Entity, componentMap: ComponentMap2) {
     this.entities.set(entity, componentMap);
 
     // Check and add to filters
-    for (const [filter, entities] of this.filters.entries()) {
+    for (const filter of this.filters) {
       if ((componentMap.mask & filter.mask) === filter.mask) {
-        entities.push(componentMap);
+        filter.componentMaps.push(componentMap);
       }
     }
 
@@ -63,13 +63,13 @@ export class EntityManager {
     const entityComponents = this.entities.get(entity);
 
     if (entityComponents != null) {
-      for (const [_filter, componentMaps] of this.filters.entries()) {
-        const index = componentMaps.findIndex(
+      for (const filter of this.filters) {
+        const index = filter.componentMaps.findIndex(
           (componentMap) => componentMap.entity.id === entity.id
         );
 
         if (index !== -1) {
-          componentMaps.splice(index, 1);
+          filter.componentMaps.splice(index, 1);
         }
       }
     }
@@ -82,7 +82,7 @@ export class EntityManager {
   }
 
   createFilter(...factories: ComponentFactory[]) {
-    const filtered: ComponentMap[] = [];
+    const filtered: ComponentMap2[] = [];
     const mask = factories.reduce(
       (filterMask, factory) => filterMask | factory.mask.value,
       0n
@@ -96,7 +96,7 @@ export class EntityManager {
 
     const filter = new Filter(mask, filtered);
 
-    this.filters.set(filter, filtered);
+    this.filters.push(filter);
 
     return filter;
   }
