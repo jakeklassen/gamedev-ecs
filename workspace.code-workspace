@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "✨ root",
+			"path": "."
+		},
+		{
+			"name": "📦 @gamedev/ecs",
+			"path": "packages/ecs"
+		},
+		{
+			"name": "📦 ecs-benchmarks",
+			"path": "packages/ecs-benchmarks"
+		},
+		{
+			"name": "📦 node-benchmarks",
+			"path": "packages/node-benchmarks"
+		}
+	],
+	"remoteAuthority": "wsl+Ubuntu-18.04",
+	"settings": {}
+}

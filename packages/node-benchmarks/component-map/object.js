@@ -6,22 +6,9 @@ const ITERATIONS = 1_000_000;
 
 const suite = new Benchmark.Suite();
 
-class FastPosition {
-  static index = 3;
-  static x = 0;
-  static y = 1;
-
-  data = [0, 0];
-
-  constructor(x = 0, y = 0) {
-    this.data[FastPosition.x] = x;
-    this.data[FastPosition.y] = x;
-  }
-}
-
 const componentMap = {
-  get(component) {
-    return this[component.index];
+  get(ctor) {
+    return this[ctor.index];
   },
 
   set(ctor, component) {
@@ -30,7 +17,7 @@ const componentMap = {
 };
 
 componentMap.set(Position, new Position());
-// componentMap.set(RGBA, [1, 2, 3, 4]);
+componentMap.set(RGBA, new RGBA());
 
 const componentClasses = Array.from(
   { length: ITERATIONS },
@@ -49,12 +36,16 @@ suite
   .add("no-op loop baseline", () => {
     for (let i = 0; i < ITERATIONS; ++i);
   })
-  // .add("Object set components", () => {
-  //   for (let i = 0; i < ITERATIONS; ++i) {
-  //     const Ctor = componentClasses[i];
-  //     componentMap.set(Ctor, new Ctor());
-  //   }
-  // })
+  .add("Object set components", () => {
+    for (let i = 0; i < ITERATIONS; ++i) {
+      // const Ctor = componentClasses[i];
+      // componentMap.set(Ctor, new Ctor());
+      componentMap.set(
+        i % 2 === 0 ? Position : RGBA,
+        i % 2 === 0 ? new Position() : new RGBA()
+      );
+    }
+  })
   .add("Object get component by Constructor", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
       const position = componentMap.get(Position);
