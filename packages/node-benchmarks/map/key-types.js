@@ -1,4 +1,5 @@
 const Benchmark = require("benchmark");
+const { Position } = require("../shared/position.class");
 
 const ITERATIONS = 1_000_000;
 
@@ -8,14 +9,23 @@ const numberKey = 12345;
 const stringKey = "12345";
 const symbolKey = Symbol.for("12345");
 
+/**
+ * @type {Map<number, Position>}
+ */
 const numericMap = new Map();
-numericMap.set(numberKey, 0);
+numericMap.set(numberKey, new Position());
 
+/**
+ * @type {Map<string, Position>}
+ */
 const stringMap = new Map();
-stringMap.set(stringKey, 0);
+stringMap.set(stringKey, new Position());
 
+/**
+ * @type {Map<symbol, Position>}
+ */
 const symbolMap = new Map();
-symbolMap.set(symbolKey, 0);
+symbolMap.set(symbolKey, new Position());
 
 suite
   .add("no-op loop baseline", () => {
@@ -23,22 +33,22 @@ suite
   })
   .add("numeric key read", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      numericMap.get(numberKey);
+      numericMap.get(numberKey).x;
     }
   })
   .add("numeric key write", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      numericMap.set(numberKey, { i });
+      numericMap.get(numberKey).x = i;
     }
   })
   .add("string key read", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      stringMap.get(stringKey);
+      stringMap.get(stringKey).x;
     }
   })
   .add("string key write", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      stringMap.set(stringKey, { i });
+      stringMap.get(stringKey).x = i;
     }
   })
   .add("symbol key read", () => {
@@ -48,7 +58,7 @@ suite
   })
   .add("symbol key write", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      symbolMap.set(symbolKey, { i });
+      symbolMap.get(symbolKey).x = i;
     }
   })
   .on("cycle", (event) => {
