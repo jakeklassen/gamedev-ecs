@@ -1,4 +1,4 @@
-import { ComponentMap2 } from './component-map';
+import { ComponentMap2 } from './component-map-2';
 import { ComponentFactory, Entity, EntityManager } from './entity-manager';
 
 export class EntityBuilder {

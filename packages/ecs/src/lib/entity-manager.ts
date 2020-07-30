@@ -1,4 +1,4 @@
-import { ComponentMap2 } from './component-map';
+import { ComponentMap2 } from './component-map-2';
 import { EntityBuilder } from './entity-builder';
 
 export type SimpleType = string | number | bigint | boolean | null;
