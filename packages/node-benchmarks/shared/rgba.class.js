@@ -1,5 +1,8 @@
-class RGBA {
+const { Component } = require("./component.class");
+
+class RGBA extends Component {
   static index = 1;
+  static symbol = Symbol.for(RGBA.name);
 
   /** @type {number} */
   r;
@@ -18,6 +21,7 @@ class RGBA {
    * @param {number} a
    */
   constructor(r = 0, g = 0, b = 0, a = 0) {
+    super();
     this.r = r;
     this.g = g;
     this.b = b;

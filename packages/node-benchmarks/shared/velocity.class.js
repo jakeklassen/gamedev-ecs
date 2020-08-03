@@ -1,8 +1,8 @@
 const { Component } = require("./component.class");
 
-class Position extends Component {
-  // static index = 0;
-  static symbol = Symbol.for(Position.name);
+class Velocity extends Component {
+  static index = 0;
+  static symbol = Symbol.for(Velocity.name);
 
   /** @type {number} */
   x;
@@ -21,4 +21,4 @@ class Position extends Component {
   }
 }
 
-exports.Position = Position;
+exports.Velocity = Velocity;

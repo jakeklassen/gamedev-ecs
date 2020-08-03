@@ -2,23 +2,43 @@ const Benchmark = require("benchmark");
 const { Position } = require("../shared/position.class");
 const { RGBA } = require("../shared/rgba.class");
 const { Velocity } = require("../shared/velocity.class");
+const { Component } = require("../shared/component.class");
+const { SparseSet } = require("../shared/sparse-set");
 
 const ITERATIONS = 1_000_000;
 
 const suite = new Benchmark.Suite();
 
-const componentMap = new Map();
-componentMap.set(Position, new Position());
-componentMap.set(Velocity, new Velocity());
-componentMap.set(RGBA, new RGBA());
+const entity = 1;
+
+/**
+ * @type {SparseSet<Position>}
+ */
+const positionSet = new SparseSet();
+positionSet.insert(entity, new Position());
+
+/**
+ * @type {SparseSet<Velocity>}
+ */
+const velocitySet = new SparseSet();
+velocitySet.insert(entity, new Velocity());
+
+/**
+ * @type {SparseSet<RGBA>}
+ */
+const rgbaSet = new SparseSet();
+rgbaSet.insert(entity, new RGBA());
+
+const anySet = new SparseSet();
 
 const componentClasses = Array.from(
   { length: ITERATIONS },
   (v, k) =>
-    class {
+    class extends Component {
       static index = k + 10;
 
       constructor(x = 0, y = 0) {
+        super();
         this.x = x;
         this.y = y;
       }
@@ -29,21 +49,21 @@ suite
   .add("no-op loop baseline", () => {
     for (let i = 0; i < ITERATIONS; ++i);
   })
-  .add("Map write components", () => {
-    for (let i = 0; i < ITERATIONS; ++i) {
+  .add("SparseSet set components", () => {
+    for (let i = 2; i < ITERATIONS; ++i) {
       const Ctor = componentClasses[i];
-      componentMap.set(Ctor, new Ctor());
+      anySet.insert(i, new Ctor());
     }
   })
-  .add("Map get component by Constructor", () => {
+  .add("SparseSet get component by Constructor", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      const position = componentMap.get(Position);
+      const position = positionSet.get(entity);
     }
   })
   .add("Movement system", () => {
     for (let i = 0; i < ITERATIONS; ++i) {
-      const position = componentMap.get(Position);
-      const velocity = componentMap.get(Velocity);
+      const position = positionSet.get(entity);
+      const velocity = velocitySet.get(entity);
 
       position.x += velocity.x;
       position.y += velocity.y;

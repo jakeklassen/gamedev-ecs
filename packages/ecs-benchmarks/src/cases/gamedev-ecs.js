@@ -95,7 +95,7 @@ exports.bench_update = (count) => {
 
   console.log("filter3 count", filter3.entities.length);
 
-  return function ekr_bench_update() {
+  return function gamedev_ecs_bench_update() {
     for (const entity of filter1.entities) {
       const pos = entity.position;
       const vel = entity.velocity;
