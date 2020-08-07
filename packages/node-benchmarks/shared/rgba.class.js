@@ -1,7 +1,7 @@
 const { Component } = require("./component.class");
 
 class RGBA extends Component {
-  static index = 1;
+  static index = 2;
   static symbol = Symbol.for(RGBA.name);
 
   /** @type {number} */

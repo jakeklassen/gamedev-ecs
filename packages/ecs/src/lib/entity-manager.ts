@@ -20,8 +20,7 @@ export type EntityId = number;
 
 export class Entity {
   id: EntityId = 0;
-
-  [key: string]: Component | number;
+  [key: string]: any;
 }
 
 export class Filter {

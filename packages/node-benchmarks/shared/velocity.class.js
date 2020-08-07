@@ -1,7 +1,7 @@
 const { Component } = require("./component.class");
 
 class Velocity extends Component {
-  static index = 0;
+  static index = 1;
   static symbol = Symbol.for(Velocity.name);
 
   /** @type {number} */

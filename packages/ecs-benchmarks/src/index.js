@@ -12,6 +12,7 @@ const update_3_queries_suite = suite(
 
 // add_implementation("@jakeklassen/ecs");
 add_implementation("@gamedev/ecs");
+add_implementation("ecsy");
 // add_implementation("ent-comp");
 // add_implementation("flock-ecs");
 // add_implementation("makr");
@@ -31,6 +32,6 @@ function add_implementation(pkg) {
   let impl_path = require.resolve(`./cases/${normalized_pkg}.js`);
   let impl = require(impl_path);
 
-  // create_and_delete_suite.add(name, impl.bench_create_delete(NUM_ENTITIES));
+  create_and_delete_suite.add(name, impl.bench_create_delete(NUM_ENTITIES));
   update_3_queries_suite.add(name, impl.bench_update(NUM_ENTITIES));
 }
