@@ -2,26 +2,21 @@
 
 const { component, World } = require("@gamedev/ecs");
 
-const position = component(function position(x = 0, y = 0) {
-  return { x, y };
-});
+const position = component("position", (x = 0, y = 0) => ({
+  x,
+  y,
+}));
 
-const velocity = component(function velocity(x = 0, y = 0) {
-  return { x, y };
-});
+const velocity = component("velocity", (x = 0, y = 0) => ({ x, y }));
 
-const animation = component(function animation(length = 1) {
-  return {
-    frame: 0,
-    length,
-  };
-});
+const animation = component("animation", (length = 1) => ({
+  frame: 0,
+  length,
+}));
 
-const render = component(function render(sprite = null) {
-  return {
-    sprite,
-  };
-});
+const render = component("render", (sprite = null) => ({
+  sprite,
+}));
 
 console.log(position.name, position.mask);
 console.log(velocity.name, velocity.mask);

@@ -5,7 +5,11 @@ import { System } from './system';
 function componentFactoryInit() {
   let n = 0n;
 
-  return function <F extends () => Component>(factory: F) {
+  return function <N extends string, F extends () => Component>(
+    componentName: N,
+    factory: F
+  ) {
+    (factory as any).componentName = componentName;
     const mask = 1n << n++;
 
     Object.defineProperty(factory, 'mask', {
@@ -17,7 +21,14 @@ function componentFactoryInit() {
       },
     });
 
+    Object.defineProperty(factory, 'componentName', {
+      writable: false,
+      configurable: false,
+      value: componentName,
+    });
+
     return factory as typeof factory & {
+      readonly componentName: typeof componentName;
       readonly mask: { value: bigint; index: number };
     };
   };
