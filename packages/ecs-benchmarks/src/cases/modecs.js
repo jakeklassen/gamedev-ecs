@@ -1,4 +1,4 @@
-const ModECS = require("modecs");
+import ModECS from "modecs";
 
 function setup() {
   let engine = ModECS();
@@ -43,7 +43,7 @@ function insertEntities(engine, count) {
   return entities;
 }
 
-exports.bench_create_delete = count => {
+export function bench_create_delete(count) {
   let engine = setup();
 
   return () => {
@@ -51,9 +51,9 @@ exports.bench_create_delete = count => {
       engine.removeEntity(entity, true);
     }
   };
-};
+}
 
-exports.bench_update = count => {
+export function bench_update(count) {
   let engine = setup();
 
   let movables = engine.registerSystem(
@@ -68,7 +68,7 @@ exports.bench_update = count => {
   let animations = engine.registerSystem(
     "Animation",
     ["ANIMATION"],
-    () => anim => {
+    () => (anim) => {
       anim.frame = (anim.frame + 1) % anim.length;
     }
   );
@@ -88,4 +88,4 @@ exports.bench_update = count => {
     animations.process();
     renderables.process();
   };
-};
+}

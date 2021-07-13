@@ -12,8 +12,7 @@ export class ComponentMap {
     factory: T,
     component: ReturnType<typeof factory>
   ) {
-    // @ts-ignore
-    this.entity[factory.componentName] = component;
+    this.entity.components[factory.componentName] = component;
     (this.mask as bigint) |= factory.mask.value;
   }
 

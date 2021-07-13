@@ -1,6 +1,6 @@
 // @ts-check
 
-const { component, World } = require("@gamedev/ecs");
+import { component, World } from "@gamedev/ecs";
 
 const position = component("position", (x = 0, y = 0) => ({
   x,
@@ -64,7 +64,12 @@ function insertEntities(world, count) {
   return entities;
 }
 
-exports.bench_create_delete = (count) => {
+/**
+ *
+ * @param {number} count
+ * @returns
+ */
+export const bench_create_delete = (count) => {
   const world = setup();
 
   return () => {
@@ -74,7 +79,7 @@ exports.bench_create_delete = (count) => {
   };
 };
 
-exports.bench_update = (count) => {
+export const bench_update = (count) => {
   const world = setup();
 
   // Create filters upfront, it's more efficient
@@ -92,15 +97,15 @@ exports.bench_update = (count) => {
 
   return function gamedev_ecs_bench_update() {
     for (const entity of filter1.entities) {
-      const pos = entity.position;
-      const vel = entity.velocity;
+      const pos = entity.components.position;
+      const vel = entity.components.velocity;
 
       pos.x += vel.x;
       pos.y += vel.y;
     }
 
     for (const entity of filter2.entities) {
-      const anim = entity.animation;
+      const anim = entity.components.animation;
 
       anim.frame = (anim.frame + 1) % anim.length;
     }

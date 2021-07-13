@@ -1,4 +1,4 @@
-const { EntityManager } = require("tiny-ecs");
+import { EntityManager } from "tiny-ecs";
 
 function Position(x = 0, y = 0) {
   this.x = x;
@@ -29,10 +29,7 @@ function insertEntities(ecs, count) {
   for (let i = 0; i < count; i++) {
     entities.push(
       ecs.createEntity().addComponent(Position),
-      ecs
-        .createEntity()
-        .addComponent(Position)
-        .addComponent(Render),
+      ecs.createEntity().addComponent(Position).addComponent(Render),
       ecs
         .createEntity()
         .addComponent(Position)
@@ -50,7 +47,7 @@ function insertEntities(ecs, count) {
   return entities;
 }
 
-exports.bench_create_delete = count => {
+export function bench_create_delete(count) {
   let ecs = setup();
 
   return () => {
@@ -58,9 +55,9 @@ exports.bench_create_delete = count => {
       entity.remove();
     }
   };
-};
+}
 
-exports.bench_update = count => {
+export function bench_update(count) {
   let ecs = setup();
 
   insertEntities(ecs, count);
@@ -88,4 +85,4 @@ exports.bench_update = count => {
     animations.forEach(animationsFn);
     renderables.forEach(renderablesFn);
   };
-};
+}

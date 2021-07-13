@@ -2,10 +2,10 @@ import { ComponentMap } from './component-map';
 import { EntityBuilder } from './entity-builder';
 import { UnionToIntersection } from './types';
 
-export type SimpleType = string | number | bigint | boolean | null;
+export type SimpleType = string | number | bigint | boolean | null | undefined;
 
 export type Component = {
-  [key: string]: SimpleType | Array<SimpleType | Component> | Component;
+  [key: string]: SimpleType | Array<SimpleType>;
 };
 
 export type ComponentFactory<T = Component> = {
@@ -26,24 +26,20 @@ type KnownKeys<T> = {
   ? U
   : never;
 
-// export type Entity = {
-//   [K in 'id']: EntityId;
-// } & {
-//   [K: string]: Component;
-// };
+export type Entity = {
+  components: {
+    [key: string]: Component;
+  };
+  id: EntityId;
+};
 
-// const entityFactory = (id: EntityId) =>
-//   ({
-//     id,
-//   } as Entity);
+export const entityFactory = (id: EntityId): Entity => ({ id, components: {} });
 
-export class Entity {
-  constructor(public readonly id: EntityId = 0) {}
-}
-
-type ComponentFilter<T> = UnionToIntersection<
-  T extends ComponentFactory<infer U> ? Record<T['componentName'], U> : never
->;
+type ComponentFilter<T> = {
+  components: UnionToIntersection<
+    T extends ComponentFactory<infer U> ? Record<T['componentName'], U> : never
+  >;
+};
 
 export type EntityOf<T extends ComponentFactory[]> = Entity &
   ComponentFilter<T[number]>;
@@ -70,7 +66,7 @@ export class EntityManager {
   private filters: Filter[] = [];
 
   createEntity() {
-    const entity = new Entity(this.nextEntityId++);
+    const entity = entityFactory(this.nextEntityId++);
 
     return entity;
   }
@@ -123,7 +119,7 @@ export class EntityManager {
 
     for (const [entity, componentMap] of this.entities.entries()) {
       if ((componentMap.mask & mask) === mask) {
-        filtered.push(entity as any);
+        filtered.push(entity as EntityOf<T>);
       }
     }
 

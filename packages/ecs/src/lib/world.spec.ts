@@ -1,25 +1,32 @@
-import { component, World } from '../src/lib/world';
+import { component, World } from './world';
 
-const position = component((x = 0, y = 0) => ({
+const position = component('position', (x = 0, y = 0) => ({
   x,
   y,
 }));
 
-const velocity = component((x = 0, y = 0) => ({
+const velocity = component('velocity', (x = 0, y = 0) => ({
   x,
   y,
 }));
 
-const animation = component((length = 1) => ({
+const animation = component('animation', (length = 1) => ({
   frame: 0,
   length,
 }));
 
-const render = component((sprite = null) => ({
+const render = component('render', (sprite = null) => ({
   sprite,
 }));
 
 describe('world', () => {
+  it('should set component factory function `name` property', () => {
+    expect(position.name).toEqual('position');
+    expect(velocity.name).toEqual('velocity');
+    expect(animation.name).toEqual('animation');
+    expect(render.name).toEqual('render');
+  });
+
   it('should work!', () => {
     const world = new World();
 
@@ -71,11 +78,11 @@ describe('world', () => {
           velocity.mask.value)
     );
 
-    expect(filter1.componentMaps.length).toEqual(1);
-    expect(filter2.componentMaps.length).toEqual(2);
+    expect(filter1.entities.length).toEqual(1);
+    expect(filter2.entities.length).toEqual(2);
 
     world.deleteEntity(e4);
-    expect(filter1.componentMaps.length).toEqual(0);
-    expect(filter2.componentMaps.length).toEqual(1);
+    expect(filter1.entities.length).toEqual(0);
+    expect(filter2.entities.length).toEqual(1);
   });
 });

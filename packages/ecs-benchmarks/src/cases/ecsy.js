@@ -1,4 +1,4 @@
-const { World, System, Component, Types } = require("ecsy");
+import { World, System, Component, Types } from "ecsy";
 
 class Position extends Component {}
 Position.schema = {
@@ -116,7 +116,7 @@ function insertEntities(world, count) {
   return entities;
 }
 
-exports.bench_create_delete = (count) => {
+export function bench_create_delete(count) {
   let world = setup();
 
   return () => {
@@ -124,9 +124,9 @@ exports.bench_create_delete = (count) => {
       entity.remove();
     }
   };
-};
+}
 
-exports.bench_update = (count) => {
+export function bench_update(count) {
   let world = setup();
 
   insertEntities(world, count);
@@ -134,4 +134,4 @@ exports.bench_update = (count) => {
   return () => {
     world.execute(1 / 60);
   };
-};
+}

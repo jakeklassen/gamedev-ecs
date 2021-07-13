@@ -1,26 +1,26 @@
-const EntComp = require("ent-comp");
+import EntComp from "ent-comp";
 
 function setup() {
   let ecs = new EntComp();
 
   ecs.createComponent({
     name: "Position",
-    state: { x: 0, y: 0 }
+    state: { x: 0, y: 0 },
   });
 
   ecs.createComponent({
     name: "Velocity",
-    state: { dx: 0, dy: 0 }
+    state: { dx: 0, dy: 0 },
   });
 
   ecs.createComponent({
     name: "Animation",
-    state: { frame: 0, length: 5 }
+    state: { frame: 0, length: 5 },
   });
 
   ecs.createComponent({
     name: "Render",
-    state: { sprite: null }
+    state: { sprite: null },
   });
 
   return ecs;
@@ -41,7 +41,7 @@ function insertEntities(ecs, count) {
   return entities;
 }
 
-exports.bench_create_delete = count => {
+export function bench_create_delete(count) {
   let ecs = setup();
 
   return () => {
@@ -49,9 +49,9 @@ exports.bench_create_delete = count => {
       ecs.deleteEntity(entity, true);
     }
   };
-};
+}
 
-exports.bench_update = count => {
+export function bench_update(count) {
   let ecs = setup();
 
   insertEntities(ecs, count);
@@ -81,4 +81,4 @@ exports.bench_update = count => {
     animations.forEach(animationsFn);
     renderables.forEach(renderablesFn);
   };
-};
+}

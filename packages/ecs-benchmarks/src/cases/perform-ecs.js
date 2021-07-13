@@ -1,10 +1,10 @@
-const {
+import {
   Component,
   ECS,
   EntityViewFactory,
   makeComponent,
   System,
-} = require("perform-ecs");
+} from "perform-ecs";
 
 class PositionComponent extends Component {
   reset(obj, x, y) {
@@ -112,7 +112,7 @@ function create_entities(ecs, count) {
   return entities;
 }
 
-exports.bench_create_delete = (count) => {
+export function bench_create_delete(count) {
   let ecs = setup();
 
   return () => {
@@ -120,13 +120,13 @@ exports.bench_create_delete = (count) => {
       ecs.removeEntity(entity);
     }
   };
-};
+}
 
-exports.bench_update = (count) => {
+export function bench_update(count) {
   let ecs = setup();
   create_entities(ecs, count);
 
   return function perform_ecs_bench_update() {
     ecs.update(0);
   };
-};
+}

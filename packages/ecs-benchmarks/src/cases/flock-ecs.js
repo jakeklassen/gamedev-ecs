@@ -1,12 +1,12 @@
-const flock = require("flock-ecs");
+import { Component, System, World } from "flock-ecs";
 
-const Position = new flock.Component(() => ({ x: 0, y: 0 }));
-const Velocity = new flock.Component(() => ({ dx: 0, dy: 0 }));
-const Animation = new flock.Component(() => ({ frame: 0, length: 5 }));
-const Render = new flock.Component(() => ({ sprite: null }));
+const Position = new Component(() => ({ x: 0, y: 0 }));
+const Velocity = new Component(() => ({ dx: 0, dy: 0 }));
+const Animation = new Component(() => ({ frame: 0, length: 5 }));
+const Render = new Component(() => ({ sprite: null }));
 
-const movementSystem = new flock.System(
-  entities => {
+const movementSystem = new System(
+  (entities) => {
     for (let entity of entities) {
       let pos = entity.getComponent(Position);
       let vel = entity.getComponent(Velocity);
@@ -17,8 +17,8 @@ const movementSystem = new flock.System(
   [Position, Velocity]
 );
 
-const animationSystem = new flock.System(
-  entities => {
+const animationSystem = new System(
+  (entities) => {
     for (let entity of entities) {
       let anim = entity.getComponent(Animation);
       anim.frame = (anim.frame + 1) % anim.length;
@@ -27,8 +27,8 @@ const animationSystem = new flock.System(
   [Animation]
 );
 
-const renderingSystem = new flock.System(
-  entities => {
+const renderingSystem = new System(
+  (entities) => {
     for (let entity of entities) {
       if (!entity) throw new Error();
     }
@@ -37,7 +37,7 @@ const renderingSystem = new flock.System(
 );
 
 function setup() {
-  let world = new flock.World();
+  let world = new World();
 
   world.registerComponent(Position);
   world.registerComponent(Velocity);
@@ -75,7 +75,7 @@ function insertEntities(world, count) {
   return entities;
 }
 
-exports.bench_create_delete = count => {
+export function bench_create_delete(count) {
   let world = setup();
 
   return () => {
@@ -84,9 +84,9 @@ exports.bench_create_delete = count => {
     }
     world.maintain();
   };
-};
+}
 
-exports.bench_update = count => {
+export function bench_update(count) {
   let world = setup();
 
   insertEntities(world, count);
@@ -98,4 +98,4 @@ exports.bench_update = count => {
     animationSystem.run(world);
     renderingSystem.run(world);
   };
-};
+}
